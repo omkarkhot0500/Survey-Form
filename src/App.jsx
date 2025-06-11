@@ -270,7 +270,7 @@ function SurveyScreen({
         </div>
         
         <div>
-          {!question.required && (
+          {!question.required && !isLastQuestion && (
             <button 
               onClick={onSkip}
               style={{
