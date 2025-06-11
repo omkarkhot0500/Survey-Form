@@ -88,13 +88,15 @@ function App() {
   };
 
   const confirmSubmit = () => {
-    // Save responses (using state instead of localStorage for this environment)
+    // Save responses in memory
     const newResponse = {
       sessionId,
       timestamp: new Date().toISOString(),
       answers,
       status: 'COMPLETED'
     };
+    
+    console.log('Survey submitted:', newResponse);
     
     setShowConfirmDialog(false);
     setCurrentScreen('thankyou');
@@ -114,7 +116,15 @@ function App() {
   const isLastQuestion = currentQuestionIndex === SURVEY_QUESTIONS.length - 1;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#f5f5f5',
+      fontFamily: 'Arial, sans-serif',
+      padding: '20px'
+    }}>
       {currentScreen === 'welcome' && (
         <WelcomeScreen onStart={startSurvey} />
       )}
@@ -152,13 +162,29 @@ function App() {
 // Welcome Screen Component
 function WelcomeScreen({ onStart }) {
   return (
-    <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
-      <h1 className="text-3xl font-bold text-gray-800 mb-4">Welcome! 👋</h1>
-      <p className="text-gray-600 mb-4">We value your feedback and would love to hear about your experience with us.</p>
-      <p className="text-gray-600 mb-6">This survey will take just a few minutes to complete.</p>
+    <div style={{
+      backgroundColor: 'white',
+      padding: '40px',
+      borderRadius: '8px',
+      boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+      textAlign: 'center',
+      maxWidth: '500px',
+      width: '100%'
+    }}>
+      <h1 style={{ marginBottom: '20px', color: '#333' }}>Welcome! 👋</h1>
+      <p style={{ marginBottom: '15px', color: '#666' }}>We value your feedback and would love to hear about your experience with us.</p>
+      <p style={{ marginBottom: '30px', color: '#666' }}>This survey will take just a few minutes to complete.</p>
       <button 
-        className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
         onClick={onStart}
+        style={{
+          backgroundColor: '#007bff',
+          color: 'white',
+          border: 'none',
+          padding: '12px 24px',
+          borderRadius: '5px',
+          fontSize: '16px',
+          cursor: 'pointer'
+        }}
       >
         Start Survey
       </button>
@@ -181,19 +207,37 @@ function SurveyScreen({
   isLastQuestion 
 }) {
   return (
-    <div className="bg-white rounded-lg shadow-lg p-8 max-w-2xl w-full">
-      <div className="mb-6">
-        <span className="text-sm text-gray-500 mb-2 block">Question {questionNumber} of {totalQuestions}</span>
-        <div className="w-full bg-gray-200 rounded-full h-2">
+    <div style={{
+      backgroundColor: 'white',
+      padding: '40px',
+      borderRadius: '8px',
+      boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+      maxWidth: '600px',
+      width: '100%'
+    }}>
+      <div style={{ marginBottom: '30px' }}>
+        <span style={{ color: '#666', fontSize: '14px' }}>Question {questionNumber} of {totalQuestions}</span>
+        <div style={{
+          width: '100%',
+          height: '4px',
+          backgroundColor: '#e0e0e0',
+          borderRadius: '2px',
+          marginTop: '8px'
+        }}>
           <div 
-            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-            style={{ width: `${(questionNumber / totalQuestions) * 100}%` }}
+            style={{
+              width: `${(questionNumber / totalQuestions) * 100}%`,
+              height: '100%',
+              backgroundColor: '#007bff',
+              borderRadius: '2px',
+              transition: 'width 0.3s ease'
+            }}
           ></div>
         </div>
       </div>
       
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold text-gray-800 mb-6 text-center">{question.text}</h2>
+      <div style={{ marginBottom: '40px' }}>
+        <h2 style={{ marginBottom: '20px', color: '#333' }}>{question.text}</h2>
         
         <QuestionInput
           question={question}
@@ -202,12 +246,23 @@ function SurveyScreen({
         />
       </div>
       
-      <div className="flex justify-between items-center">
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}>
         <div>
           {canGoBack && (
             <button 
-              className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-2 px-4 rounded-lg transition-colors duration-200"
               onClick={onPrevious}
+              style={{
+                backgroundColor: '#6c757d',
+                color: 'white',
+                border: 'none',
+                padding: '10px 20px',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
             >
               Previous
             </button>
@@ -215,10 +270,17 @@ function SurveyScreen({
         </div>
         
         <div>
-          {!question.required && !isLastQuestion && (
+          {!question.required && (
             <button 
-              className="text-gray-500 hover:text-gray-700 font-medium underline"
               onClick={onSkip}
+              style={{
+                backgroundColor: 'transparent',
+                color: '#666',
+                border: '1px solid #ccc',
+                padding: '10px 20px',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
             >
               Skip
             </button>
@@ -228,15 +290,29 @@ function SurveyScreen({
         <div>
           {isLastQuestion ? (
             <button 
-              className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors duration-200"
               onClick={onSubmit}
+              style={{
+                backgroundColor: '#007bff',
+                color: 'white',
+                border: 'none',
+                padding: '10px 20px',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
             >
               Submit Survey
             </button>
           ) : (
             <button 
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200"
               onClick={onNext}
+              style={{
+                backgroundColor: '#007bff',
+                color: 'white',
+                border: 'none',
+                padding: '10px 20px',
+                borderRadius: '5px',
+                cursor: 'pointer'
+              }}
             >
               Next
             </button>
@@ -262,23 +338,43 @@ function QuestionInput({ question, value, onChange }) {
 // Rating Input Component
 function RatingInput({ max, value, onChange }) {
   return (
-    <div className="flex flex-col items-center">
-      <div className="flex gap-2 mb-4 justify-center">
+    <div style={{ textAlign: 'center' }}>
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        gap: '8px',
+        marginBottom: '15px',
+        flexWrap: 'wrap'
+      }}>
         {Array.from({ length: max }, (_, i) => i + 1).map(num => (
           <button
             key={num}
-            className={`w-12 h-12 rounded-full border-2 font-semibold transition-all duration-200 flex items-center justify-center ${
-              value === num 
-                ? 'bg-blue-600 text-white border-blue-600' 
-                : 'bg-white text-gray-700 border-gray-300 hover:border-blue-400'
-            }`}
             onClick={() => onChange(num)}
+            style={{
+              width: '40px',
+              height: '40px',
+              border: value === num ? '2px solid #007bff' : '2px solid #ddd',
+              backgroundColor: value === num ? '#007bff' : 'white',
+              color: value === num ? 'white' : '#333',
+              borderRadius: '50%',
+              cursor: 'pointer',
+              fontSize: '16px',
+              fontWeight: 'bold',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
           >
             {num}
           </button>
         ))}
       </div>
-      <div className="flex justify-between w-full max-w-xs text-sm text-gray-500">
+      <div style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        fontSize: '14px',
+        color: '#666'
+      }}>
         <span>Poor</span>
         <span>Excellent</span>
       </div>
@@ -289,13 +385,20 @@ function RatingInput({ max, value, onChange }) {
 // Text Input Component
 function TextInput({ value, onChange }) {
   return (
-    <div className="w-full">
+    <div>
       <textarea
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder="Please share your thoughts..."
         rows={4}
-        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
+        style={{
+          width: '100%',
+          padding: '12px',
+          border: '1px solid #ddd',
+          borderRadius: '5px',
+          fontSize: '14px',
+          resize: 'vertical'
+        }}
       />
     </div>
   );
@@ -314,12 +417,20 @@ function ThankYouScreen() {
   }, []);
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full text-center">
-      <h1 className="text-3xl font-bold text-gray-800 mb-4">Thank You! 🎉</h1>
-      <p className="text-gray-600 mb-4">Your feedback has been successfully submitted.</p>
-      <p className="text-gray-600 mb-6">We appreciate you taking the time to share your thoughts with us.</p>
-      <div className="text-gray-500">
-        <p>Returning to start in {countdown} seconds...</p>
+    <div style={{
+      backgroundColor: 'white',
+      padding: '40px',
+      borderRadius: '8px',
+      boxShadow: '0 2px 10px rgba(0,0,0,0.1)',
+      textAlign: 'center',
+      maxWidth: '500px',
+      width: '100%'
+    }}>
+      <h1 style={{ marginBottom: '20px', color: '#333' }}>Thank You! 🎉</h1>
+      <p style={{ marginBottom: '15px', color: '#666' }}>Your feedback has been successfully submitted.</p>
+      <p style={{ marginBottom: '30px', color: '#666' }}>We appreciate you taking the time to share your thoughts with us.</p>
+      <div>
+        <p style={{ color: '#999' }}>Returning to start in {countdown} seconds...</p>
       </div>
     </div>
   );
@@ -328,20 +439,53 @@ function ThankYouScreen() {
 // Confirmation Dialog Component
 function ConfirmDialog({ onConfirm, onCancel }) {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-lg p-6 max-w-sm w-full">
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Submit Survey</h3>
-        <p className="text-gray-600 mb-6">Are you sure you want to submit your responses?</p>
-        <div className="flex gap-3 justify-end">
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0,0,0,0.5)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 1000
+    }}>
+      <div style={{
+        backgroundColor: 'white',
+        padding: '30px',
+        borderRadius: '8px',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+        maxWidth: '400px',
+        width: '90%',
+        textAlign: 'center'
+      }}>
+        <h3 style={{ marginBottom: '15px', color: '#333' }}>Submit Survey</h3>
+        <p style={{ marginBottom: '30px', color: '#666' }}>Are you sure you want to submit your responses?</p>
+        <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
           <button 
-            className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-semibold py-2 px-4 rounded-lg transition-colors duration-200"
             onClick={onCancel}
+            style={{
+              backgroundColor: '#6c757d',
+              color: 'white',
+              border: 'none',
+              padding: '10px 20px',
+              borderRadius: '5px',
+              cursor: 'pointer'
+            }}
           >
             Cancel
           </button>
           <button 
-            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200"
             onClick={onConfirm}
+            style={{
+              backgroundColor: '#007bff',
+              color: 'white',
+              border: 'none',
+              padding: '10px 20px',
+              borderRadius: '5px',
+              cursor: 'pointer'
+            }}
           >
             Yes, Submit
           </button>
